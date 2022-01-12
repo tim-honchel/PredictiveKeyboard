@@ -1,0 +1,79 @@
+﻿.button-container {
+    float:left;
+    background-color:gainsboro;
+    width: max-content;
+    padding:10px;
+}
+
+.button-container button {
+    height: 50px;
+    width: 100px;
+    background-color:whitesmoke;
+}
+
+#buttonCenter {
+    border-radius: 50%;
+}
+
+#buttonUp, #buttonDown {
+   display: block;
+   margin: auto;
+}
+
+.cursor-container {
+    float: left;
+    background-color:lightsalmon;
+    width: max-content;
+    padding: 10px 0px 10px 10px;
+    line-height: .4;
+}
+
+#cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom {
+    color:lightsalmon;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+  }
+
+.keyboard-container {
+    float:left;
+    background-color:beige;
+    width: max-content;
+    padding:10px 10px 10px 0px;
+    line-height:.4;
+}
+
+.keyboard-container p {
+    text-align:center
+}
+
+.main-container {
+    column-gap: 0%;
+}
+
+.results-container {
+    float:left;
+    background-color: azure;
+    width: max-content;
+    padding:10px;
+    line-height:.4;
+}
+
+.selection-container {
+    float: left;
+    background-color:lightsalmon;
+    width: max-content;
+    padding: 10px 0px 10px 10px;
+    line-height: .4;
+}
+
+#selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selectionDown, #selectionBottom {
+    color: lightsalmon;
+}
+
+  
