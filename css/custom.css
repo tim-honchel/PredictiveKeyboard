@@ -1,4 +1,8 @@
-﻿.button-container {
+﻿body {
+    padding:10px;
+}
+
+.button-container {
     float:left;
     background-color:gainsboro;
     width: max-content;
@@ -22,14 +26,23 @@
 
 .cursor-container {
     float: left;
-    background-color:lightsalmon;
+    background-color:beige;
     width: max-content;
     padding: 10px 0px 10px 10px;
     line-height: .4;
 }
 
 #cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom {
-    color:lightsalmon;
+    color:beige;
+}
+
+.final-message {
+    float:left;
+    width:100%;
+}
+
+#finished {
+    font-weight: bold;
 }
 
 footer {
@@ -58,7 +71,7 @@ footer {
 
 .results-container {
     float:left;
-    background-color: azure;
+    background-color: beige;
     width: max-content;
     padding:10px;
     line-height:.4;
@@ -66,14 +79,15 @@ footer {
 
 .selection-container {
     float: left;
-    background-color:lightsalmon;
+    background-color:beige;
     width: max-content;
     padding: 10px 0px 10px 10px;
     line-height: .4;
 }
 
-#selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selectionDown, #selectionBottom {
-    color: lightsalmon;
+#selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selection8, #selection9 {
+    color: beige;
+    font-weight:bold;
 }
 
   
