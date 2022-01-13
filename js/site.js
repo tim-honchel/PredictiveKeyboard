@@ -45,6 +45,9 @@ fs.readFile('resources/dictionary.txt', (err, data) => {
 })
 */
 
+// Temporary solution until full dictionary can be loaded
+var wordList = ["acorn", "almond", "amaranth", "anchovies", "apple", "applesauce", "apricot", "artichoke", "arugula", "asparagus", "avocado", "banana", "carrot", "daikon", "edamame", "fig", "ginger", "horseradish", "ice", "jackfruit", "kale", "lemon", "melon", "nectarine", "okra", "pineapple", "quail", "radish", "squash", "tangerine", "ulluco", "veal", "watermelon", "xylophone", "zebra"]
+
 // GLOBAL VARIABLES
 
 // Position of the "mouse"
@@ -55,6 +58,9 @@ var resultPosition;
 // User's search query
 var searchString;
 var displayString;
+
+// Potential search matches
+var shortList;
 
 // Options displayed on keyboard
 var character1;
@@ -85,7 +91,7 @@ document.getElementById("buttonDown").onclick = function () { pressButtonDown() 
 document.getElementById("buttonLeft").onclick = function () { pressButtonLeft() };
 document.getElementById("buttonRight").onclick = function () { pressButtonRight() };
 document.getElementById("buttonCenter").onclick = function () { pressButtonCenter() };
-document.getElementById("loadDictionary").onclick = function () { loadDictionary() };
+document.getElementById("testButton").onclick = function () { calculateProbabilities() };
 
 // When keys are pressed
 document.addEventListener('keydown', function(logKey) {
@@ -151,6 +157,23 @@ function addSpace() {
     updateDisplay();
 }
 
+
+// Determines probabilities of next character and final query
+function calculateProbabilities() {
+    document.getElementById("testButton").style.backgroundColor = "yellow";
+    setTimeout(() => { document.getElementById("testButton").style.backgroundColor = "whitesmoke" },250);
+    shortList = wordList.filter(word => word.startsWith(searchString.toLowerCase()));
+    result1 = searchString.toLowerCase();
+    result2 = (wordList.length>=1) ? shortList[0]: "";
+    result3 = (wordList.length>=1) ? shortList[1]: "";
+    result4 = (wordList.length>=1) ? shortList[2]: "";
+    result5 = (wordList.length>=1) ? shortList[3]: "";
+    result6 = (wordList.length>=1) ? shortList[4]: "";
+    result7 = (wordList.length>=1) ? shortList[5]: "";
+    result8 = (wordList.length>=1) ? shortList[6]: "";
+    result9 = (wordList.length>=1) ? shortList[7]: "";
+}
+
 // Determines where to place the "mouse"
 function chooseSelector() {
     
@@ -175,7 +198,7 @@ function chooseSelector() {
             updateCursor();
             break;
         case "result":
-            updateResult();
+            updateResultCursor();
             break;
         case "complete":
             completeSearch();
@@ -289,6 +312,26 @@ function pressButtonCenter() {
     chooseSelector();
 }
 
+//
+function resetKeyboard() {
+    character1 ='A';
+    character2 = 'C';
+    character3 = 'M';
+    character4 = 'P';
+    character5 = 'S';
+    character6 = 'T';
+    character7 = 'U';
+    result1 = "and";
+    result2 = "for";
+    result3 = "have";
+    result4 = "not";
+    result5 = "that";
+    result6 = "this";
+    result7 = "the";
+    result8 = "with";
+    result9 = "you";
+}
+
 // Updates the search string when the user selects one of the recommended results
 function selectResult() {
     var resultSelected;
@@ -342,22 +385,8 @@ function setStartingVariables() {
     searchString = "";
     displayString = "______________";
     document.getElementById("finished").innerHTML = "";
-    character1 ='A';
-    character2 = 'C';
-    character3 = 'M';
-    character4 = 'P';
-    character5 = 'S';
-    character6 = 'T';
-    character7 = 'U';
-    result1 = "and";
-    result2 = "for";
-    result3 = "have";
-    result4 = "not";
-    result5 = "that";
-    result6 = "this";
-    result7 = "the";
-    result8 = "with";
-    result9 = "you";
+    shortList = [];
+    resetKeyboard();
     chooseSelector();
     updateDisplay();
     updateButtonLabels();
@@ -422,11 +451,31 @@ function updateDisplay() {
         displayString += "_";
     }
     document.getElementById("searchString").innerHTML = displayString;
+    if (searchString.length == 0) {
+        resetKeyboard();
+    }
+    else {
+        calculateProbabilities();
+    }
     updateCharacters();
+    updateResults();
+}
+
+// Updates the displayed character options on the keyboard
+function updateResults() {
+    document.getElementById("result1").innerHTML = result1;
+    document.getElementById("result2").innerHTML = result2;
+    document.getElementById("result3").innerHTML = result3;
+    document.getElementById("result4").innerHTML = result4;
+    document.getElementById("result5").innerHTML = result5;
+    document.getElementById("result6").innerHTML = result6;
+    document.getElementById("result7").innerHTML = result7;
+    document.getElementById("result8").innerHTML = result8;
+    document.getElementById("result9").innerHTML = result9;
 }
 
 // Updates the vertical position of the results cursor
-function updateResult() {
+function updateResultCursor() {
     
     switch (resultPosition) {
         case 1:
