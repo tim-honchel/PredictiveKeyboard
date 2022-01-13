@@ -24,7 +24,7 @@ app.post("/api/predictive", (req, res, next) => {
       (err, contents) => {
         if (err) next(err);
 
-        let wordList = contents.toString().split("\n");
+        let wordList = contents.toString().split("\r\n");
 
         console.log(wordList);
 
