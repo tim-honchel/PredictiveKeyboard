@@ -23,6 +23,8 @@ namespace FinalProjectKeyboard
             var filepath = Directory.GetCurrentDirectory().Replace(@"bin\Debug\net5.0", @"Resources\dictionary.txt");
             var logFile = File.ReadAllLines(filepath);
             var wordList = new List<string>(logFile);
+            
+            
             var cont = true;
 
             while (cont == true)
