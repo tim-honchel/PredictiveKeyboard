@@ -36,11 +36,6 @@
     color:beige;
 }
 
-.final-message {
-    float:left;
-    width:100%;
-}
-
 #finished {
     font-weight: bold;
 }
@@ -90,4 +85,8 @@ footer {
     font-weight:bold;
 }
 
+.test-messages {
+    float:left;
+    width:100%;
+}
   

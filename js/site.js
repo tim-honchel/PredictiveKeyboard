@@ -1,59 +1,14 @@
 ﻿// IMPORT ENGLISH DICTIONARY
 
-/* original C# script
-var filepath = Directory.GetCurrentDirectory().Replace(@"bin\Debug\net5.0", @"Resources\dictionary.txt");
-var logFile = File.ReadAllLines(filepath);
-var wordList = new List<string>(logFile);
-*/
-
-/* 1st attempt JS
-var filepath = window.location.pathname;
-*/
-
-/* 2nd attempt JS
-var dictionaryFile = new XMLHttpRequest();
-dictionaryFile.open('GET', '/resources/dictionary.txt');
-dictionaryFile.onreadystatechange = function() {
-    alert(dictionaryFile.responseText);
-}
-dictionaryFile.send();
-*/
-
-/* 3rd attempt JS
-var dictionaryFile = new XMLHttpRequest();
-dictionaryFile.open('GET', '/resources/dictionary.txt');
-dictionaryFile.onreadystatechange = function() {
-    //alert(dictionaryFile.responseText);
-    var logFile = JSON.parse(dictionaryFile.responseText);
-    var logFileData = logFile.Data;
-}
-dictionaryFile.send();
-*/
-
-/* 4th attempt JS
-import { readFile } from "fs";
-readFile("/resources/dictionary.txt", function(text){
-    var textByLine = text.split("\n");
-}); 
-*/
-
-/*5th attempt JS
-const fs = require('fs')
-fs.readFile('resources/dictionary.txt', (err, data) => {
-    if (err) throw err;
-    console.log(data.toString());
-})
-*/
-
-// Temporary solution until full dictionary can be loaded
-var wordList = ["acorn", "almond", "amaranth", "anchovies", "apple", "applesauce", "apricot", "artichoke", "arugula", "asparagus", "avocado", "banana", "carrot", "daikon", "edamame", "fig", "ginger", "horseradish", "ice", "jackfruit", "kale", "lemon", "melon", "nectarine", "okra", "pineapple", "quail", "radish", "squash", "tangerine", "ulluco", "veal", "watermelon", "xylophone", "zebra"]
+// From dictionary.js
+var wordList = allWords1.concat(allWords2, allWords3, allWords4, allWords5, allWords6, allWords7, allWords8, allWords9, allWords10, allWords11, allWords12, allWords13, allWords14, allWords15, allWords16, allWords17, allWords18, allWords19);
 
 // GLOBAL VARIABLES
 
 // Position of the "mouse"
-var selectorPosition;
-var cursorPosition;
-var resultPosition;
+var selectorLocation;
+var characterCursorPosition;
+var resultCursorPosition;
 
 // User's search query
 var searchString;
@@ -91,7 +46,7 @@ document.getElementById("buttonDown").onclick = function () { pressButtonDown() 
 document.getElementById("buttonLeft").onclick = function () { pressButtonLeft() };
 document.getElementById("buttonRight").onclick = function () { pressButtonRight() };
 document.getElementById("buttonCenter").onclick = function () { pressButtonCenter() };
-document.getElementById("testButton").onclick = function () { calculateProbabilities() };
+//document.getElementById("testButton").onclick = function () { document.getElementById("test1").innerHTML = `${selectorLocation}, ${searchString}`; };
 
 // When keys are pressed
 document.addEventListener('keydown', function(logKey) {
@@ -121,7 +76,7 @@ document.addEventListener('keydown', function(logKey) {
 // Adds a character to the search string
 function addCharacter() {
     var characterToAdd;
-    switch (cursorPosition) {
+    switch (characterCursorPosition) {
         case 1:
             characterToAdd = character1;
             break;
@@ -148,34 +103,64 @@ function addCharacter() {
             break;
     }
     searchString += characterToAdd;
-    updateDisplay();
+    calculateProbabilities();
 }
 
 // Adds a space to the seardh string
 function addSpace() {
-    searchString += " ";
-    updateDisplay();
+    searchString += "_";
+    calculateProbabilities();
 }
 
 
 // Determines probabilities of next character and final query
 function calculateProbabilities() {
-    document.getElementById("testButton").style.backgroundColor = "yellow";
-    setTimeout(() => { document.getElementById("testButton").style.backgroundColor = "whitesmoke" },250);
-    shortList = wordList.filter(word => word.startsWith(searchString.toLowerCase()));
-    result1 = searchString.toLowerCase();
-    result2 = (wordList.length>=1) ? shortList[0]: "";
-    result3 = (wordList.length>=1) ? shortList[1]: "";
-    result4 = (wordList.length>=1) ? shortList[2]: "";
-    result5 = (wordList.length>=1) ? shortList[3]: "";
-    result6 = (wordList.length>=1) ? shortList[4]: "";
-    result7 = (wordList.length>=1) ? shortList[5]: "";
-    result8 = (wordList.length>=1) ? shortList[6]: "";
-    result9 = (wordList.length>=1) ? shortList[7]: "";
+    // Finds every English word that begins with the current search string and displays the top results
+    if (searchString.length > 0) {
+        shortList = wordList.filter(word => word.startsWith(searchString.toLowerCase()));
+        for( let i = 0; i < shortList.length; i++){ 
+            if ( shortList[i].toUpperCase() === searchString) { 
+                shortList.splice(i,1); 
+            }
+        }
+        result1 = searchString.toLowerCase();
+        result2 = (shortList.length>=1) ? shortList[0]: ".";
+        result3 = (shortList.length>=2) ? shortList[1]: ".";
+        result4 = (shortList.length>=3) ? shortList[2]: ".";
+        result5 = (shortList.length>=4) ? shortList[3]: ".";
+        result6 = (shortList.length>=5) ? shortList[4]: ".";
+        result7 = (shortList.length>=6) ? shortList[5]: ".";
+        result8 = (shortList.length>=7) ? shortList[6]: ".";
+        result9 = (shortList.length>=8) ? shortList[7]: ".";
+        updateDisplay();
+    
+        // Finds the most common next characters and displays them as keys
+        var nextLetterList = shortList.map((word) => word[searchString.length]);
+        var letterList = "abcdefghijklmnopqrstuvwxyz";
+        var letterDistribution = [];
+        var letterFrequency = 0;
+            for (let i = 0; i < letterList.length; i++) {
+                letterFrequency = nextLetterList.filter(nextLetter => nextLetter.startsWith(letterList[i])).length;
+                if (letterFrequency > 0) {
+                    letterDistribution.push([letterList[i],letterFrequency]);
+                }
+            }
+        letterDistribution.sort(function (letter,frequency) {return frequency[1] - letter[1]});
+        var top7LetterDistribution = letterDistribution.slice(0,7);
+        var top7Letters = top7LetterDistribution.map((pair) => pair[0]).sort().toString().toUpperCase().replaceAll(",","");
+        character1 = (top7Letters.length>=1) ? top7Letters[0]: ".";
+        character2 = (top7Letters.length>=2) ? top7Letters[1]: ".";
+        character3 = (top7Letters.length>=3) ? top7Letters[2]: ".";
+        character4 = (top7Letters.length>=4) ? top7Letters[3]: ".";
+        character5 = (top7Letters.length>=5) ? top7Letters[4]: ".";
+        character6 = (top7Letters.length>=6) ? top7Letters[5]: ".";
+        character7 = (top7Letters.length>=7) ? top7Letters[6]: "."; 
+    }
+    updateDisplay();
 }
 
 // Determines where to place the "mouse"
-function chooseSelector() {
+function chooseCursorLocation() {
     
     document.getElementById("cursor1").style.color = "beige";
     document.getElementById("cursor2").style.color = "beige";
@@ -193,15 +178,12 @@ function chooseSelector() {
     document.getElementById("selection7").style.color = "beige";
     document.getElementById("selection8").style.color = "beige";
     document.getElementById("selection9").style.color = "beige";
-    switch (selectorPosition) {
-        case "cursor":
-            updateCursor();
+    switch (selectorLocation) {
+        case "onCharacters":
+            updateCharacterCursor();
             break;
-        case "result":
+        case "onResults":
             updateResultCursor();
-            break;
-        case "complete":
-            completeSearch();
             break;
     }
     updateButtonLabels();
@@ -209,107 +191,98 @@ function chooseSelector() {
 
 // Displays after the user completes their search
 function completeSearch() {
-    document.getElementById("buttonCenter").innerHTML = "Done!";
-    document.getElementById("buttonCenter").style.backgroundColor = "red";
-    document.getElementById("finished").innerHTML = "Search complete! Press backspace to start a new search.";
+    selectorLocation = "complete";
+    document.getElementById("searchString").style.color = "green";
+    document.getElementById("test1").innerHTML = "Search complete! Press backspace to start a new search.";    
+    chooseCursorLocation();
 }
 
 // Backspaces the last character
 function deleteCharacter() {
     if (searchString.length > 0) {
         searchString = searchString.substring(0, searchString.length - 1);
-        updateDisplay();
+        calculateProbabilities();
     }
-}
-
-// Loads dictionary of English words into a list of strings
-function loadDictionary() {
-    document.getElementById("testing").innerHTML = "function called";
-    var fs = require('fs');
-    document.getElementById("testing").innerHTML = "function called, fs required";
-    fs.readFile('resources/dictionary.txt', (err, data) => {
-        document.getElementById("testing").innerHTML = "function called, fs required, file read";
-        if (err) throw err;
-        document.getElementById("testing").innerHTML = "function called, fs required, file read, error checked";
-        console.log(data.toString());
-        document.getElementById("testing").innerHTML = "function called, fs required, file read, error checked, data logged";     
-    })
-}
-
-// Determines what to do when the up button is pressed
-function pressButtonUp() {
-    document.getElementById("buttonUp").style.backgroundColor = "yellow";
-    setTimeout(() => { document.getElementById("buttonUp").style.backgroundColor = "whitesmoke" },250);
-    if (selectorPosition == "cursor" && cursorPosition >0) {
-        cursorPosition -= 1;
+    else {
+        resetKeyboard();
     }
-    else if (selectorPosition == "result" && resultPosition >1) {
-        resultPosition -= 1;
-    }
-    chooseSelector();
-}
-
-// Determines what to do when the down button is pressed
-function pressButtonDown() {
-    document.getElementById("buttonDown").style.backgroundColor = "yellow";
-    setTimeout(() => { document.getElementById("buttonDown").style.backgroundColor = "whitesmoke" },250);
-    if (selectorPosition == "cursor" && cursorPosition <8) {
-        cursorPosition += 1;
-    }
-    else if (selectorPosition == "result" && resultPosition <9) {
-        resultPosition += 1;
-    }
-    chooseSelector();
-}
-
-// Determines what to do when the left button is pressed
-function pressButtonLeft() {
-    document.getElementById("buttonLeft").style.backgroundColor = "yellow";
-    setTimeout(() => { document.getElementById("buttonLeft").style.backgroundColor = "whitesmoke" },250);
-    switch (selectorPosition) {
-        case "cursor":
-            deleteCharacter();
-            break;
-        case "result":
-            selectorPosition = "cursor";
-            resultPosition = 1;
-            break;
-        case "complete":
-            setStartingVariables();
-            break;
-    }
-    chooseSelector();
-}
-
-// Determines what to do when the rught button is pressed
-function pressButtonRight() {
-    document.getElementById("buttonRight").style.backgroundColor = "yellow";
-    setTimeout(() => { document.getElementById("buttonRight").style.backgroundColor = "whitesmoke" },250);
-    switch (selectorPosition) {
-        case "cursor":
-            selectorPosition = "result";
-            break;
-        case "result":
-            selectorPosition = "cursor";
-            addSpace();
-            break; 
-    }
-    chooseSelector();
 }
 
 // Determines what to do when the center button is pressed
 function pressButtonCenter() {
     document.getElementById("buttonCenter").style.backgroundColor = "yellow";
     setTimeout(() => { document.getElementById("buttonCenter").style.backgroundColor = "whitesmoke" },250);
-    switch (selectorPosition) {
-        case "cursor":
+    switch (selectorLocation) {
+        case "onCharacters":
             addCharacter();
             break; 
-        case "result":
+        case "onResults":
             selectResult();
             break;
     }
-    chooseSelector();
+}
+
+// Determines what to do when the down button is pressed
+function pressButtonDown() {
+    document.getElementById("buttonDown").style.backgroundColor = "yellow";
+    setTimeout(() => { document.getElementById("buttonDown").style.backgroundColor = "whitesmoke" },250);
+    if (selectorLocation == "onCharacters" && characterCursorPosition <8) {
+        characterCursorPosition += 1;
+    }
+    else if (selectorLocation == "onResults" && resultCursorPosition <9) {
+        resultCursorPosition += 1;
+    }
+    chooseCursorLocation();
+}
+
+// Determines what to do when the left button is pressed
+function pressButtonLeft() {
+    document.getElementById("buttonLeft").style.backgroundColor = "yellow";
+    setTimeout(() => { document.getElementById("buttonLeft").style.backgroundColor = "whitesmoke" },250);
+    switch (selectorLocation) {
+        case "onCharacters":
+            deleteCharacter();
+            break;
+        case "onResults":
+            selectorLocation = "onCharacters";
+            resultCursorPosition = 1;
+            chooseCursorLocation();
+            break;
+        case "complete":
+            setStartingVariables();
+            break;
+    }
+    
+}
+
+// Determines what to do when the rught button is pressed
+function pressButtonRight() {
+    document.getElementById("buttonRight").style.backgroundColor = "yellow";
+    setTimeout(() => { document.getElementById("buttonRight").style.backgroundColor = "whitesmoke" },250);
+    switch (selectorLocation) {
+        case "onCharacters":
+            selectorLocation = "onResults";
+            chooseCursorLocation();
+            break;
+        case "onResults":
+            selectorLocation = "onCharacters";
+            addSpace();
+            break; 
+    }
+    
+}
+
+// Determines what to do when the up button is pressed
+function pressButtonUp() {
+    document.getElementById("buttonUp").style.backgroundColor = "yellow";
+    setTimeout(() => { document.getElementById("buttonUp").style.backgroundColor = "whitesmoke" },250);
+    if (selectorLocation == "onCharacters" && characterCursorPosition >0) {
+        characterCursorPosition -= 1;
+    }
+    else if (selectorLocation == "onResults" && resultCursorPosition >1) {
+        resultCursorPosition -= 1;
+    }
+    chooseCursorLocation();
 }
 
 //
@@ -335,7 +308,7 @@ function resetKeyboard() {
 // Updates the search string when the user selects one of the recommended results
 function selectResult() {
     var resultSelected;
-    switch (resultPosition) {
+    switch (resultCursorPosition) {
         case 1:
             resultSelected = result1;
             break;
@@ -365,44 +338,92 @@ function selectResult() {
             break;
         default:
             resultSelected = "";
-            chooseSelector()
             break;
     }
     if (resultSelected.toUpperCase() == searchString) {
-        selectorPosition = "complete";
+        completeSearch();
     }
     else {
         searchString = resultSelected.toUpperCase();
-        updateDisplay();
+        calculateProbabilities();
     }
 }
 
 // Sets or resets the variable values for beginning a new search
 function setStartingVariables() {
-    selectorPosition = "cursor"
-    cursorPosition = 4;
-    resultPosition = 1;
+    selectorLocation = "onCharacters";
+    characterCursorPosition = 4;
+    resultCursorPosition = 1;
     searchString = "";
     displayString = "______________";
-    document.getElementById("finished").innerHTML = "";
+    document.getElementById("searchString").style.color = "black";
+    document.getElementById("test1").innerHTML = "";
     shortList = [];
     resetKeyboard();
-    chooseSelector();
+    chooseCursorLocation();
     updateDisplay();
-    updateButtonLabels();
 }
 
 // Updates the button labels when the user switches between the keyboard and the results
 function updateButtonLabels() {
-    if (selectorPosition == "cursor") {
-        document.getElementById("buttonLeft").innerHTML = "Backspace";
-        document.getElementById("buttonRight").innerHTML = "To Results";
-        document.getElementById("buttonCenter").innerHTML = "Select";
-    }
-    else if(selectorPosition == "result") {
-        document.getElementById("buttonLeft").innerHTML = "To Keyboard";
-        document.getElementById("buttonRight").innerHTML = "Space";
-        document.getElementById("buttonCenter").innerHTML = "Select";
+    switch (selectorLocation) {
+        case "onCharacters":
+            document.getElementById("buttonLeft").innerHTML = "Backspace";
+            document.getElementById("buttonRight").innerHTML = "To Results";
+            document.getElementById("buttonCenter").innerHTML = "Select";
+            document.getElementById("buttonUp").innerHTML = "Scroll Up";
+            document.getElementById("buttonDown").innerHTML = "Scroll Down";
+            break;
+        case "complete":
+            document.getElementById("buttonLeft").innerHTML = "New Search";
+            document.getElementById("buttonRight").innerHTML = ".";
+            document.getElementById("buttonCenter").innerHTML = ".";
+            document.getElementById("buttonUp").innerHTML = ".";
+            document.getElementById("buttonDown").innerHTML = ".";
+            break;
+        case "onResults":
+            document.getElementById("buttonLeft").innerHTML = "To Keyboard";
+            document.getElementById("buttonRight").innerHTML = "Space";
+            var resultHovered;
+            switch (resultCursorPosition) {
+                case 1:
+                    resultHovered = result1;
+                    break;
+                case 2:
+                    resultHovered = result2;
+                    break;
+                case 3:
+                    resultHovered = result3;
+                    break;
+                case 4:
+                    resultHovered = result4;
+                    break;
+                case 5:
+                    resultHovered = result5;
+                    break;
+                case 6:
+                    resultHovered = result6;
+                    break;
+                case 7:
+                    resultHovered = result7;
+                    break;
+                case 8:
+                    resultHovered = result8;
+                    break;
+                case 9:
+                    resultHovered = result9;
+                    break;
+                default:
+                    resultHovered = "";
+                    break;
+            }
+            if (resultHovered.toUpperCase() == searchString) {
+                document.getElementById("buttonCenter").innerHTML = "Finish Search";
+            }
+            else {
+                document.getElementById("buttonCenter").innerHTML = "Select";
+            }
+        break;
     }
 }
 
@@ -418,8 +439,8 @@ function updateCharacters() {
 }
 
 // Updates the vertical position of the character cursor
-function updateCursor() {
-    switch (cursorPosition) {
+function updateCharacterCursor() {
+    switch (characterCursorPosition) {
         case 1:
             document.getElementById("cursor1").style.color = "black";
             break;
@@ -446,17 +467,14 @@ function updateCursor() {
 
 // Updates the display of the search string
 function updateDisplay() {
+    if (searchString.length == 0) {
+        resetKeyboard();
+    }
     displayString = searchString + "_";
     for (var i = searchString.length; i<12; i++) {
         displayString += "_";
     }
     document.getElementById("searchString").innerHTML = displayString;
-    if (searchString.length == 0) {
-        resetKeyboard();
-    }
-    else {
-        calculateProbabilities();
-    }
     updateCharacters();
     updateResults();
 }
@@ -477,7 +495,7 @@ function updateResults() {
 // Updates the vertical position of the results cursor
 function updateResultCursor() {
     
-    switch (resultPosition) {
+    switch (resultCursorPosition) {
         case 1:
             document.getElementById("selection1").style.color = "black";
             break;
