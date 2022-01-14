@@ -1,23 +1,24 @@
 ﻿// IMPORT ENGLISH DICTIONARY
 
-// From dictionary.js
+// From dictionary.js, the 4,000 most common English words
 var wordList = allWords1.concat(allWords2, allWords3, allWords4, allWords5, allWords6, allWords7, allWords8, allWords9, allWords10, allWords11, allWords12, allWords13, allWords14, allWords15, allWords16, allWords17, allWords18, allWords19);
 
 // GLOBAL VARIABLES
 
 // Position of the "mouse"
-var selectorLocation;
-var characterCursorPosition;
-var resultCursorPosition;
+var selectorLocation; // onCharacters, onResults, complete
+var characterCursorPosition; // 0 to 8
+var resultCursorPosition; // 1 to 9
+var characterSet; // onHotKeys, onLetters, onNumbers
 
 // User's search query
 var searchString;
 var displayString;
 
-// Potential search matches
+// All the English words that begin with the user's search query
 var shortList;
 
-// Options displayed on keyboard
+// Options displayed on character side of the keyboard
 var character1;
 var character2;
 var character3;
@@ -25,6 +26,8 @@ var character4;
 var character5;
 var character6;
 var character7;
+
+// Options displayed on the result side of the keyboard
 var result1;
 var result2;
 var result3;
@@ -34,6 +37,21 @@ var result6;
 var result7;
 var result8;
 var result9;
+
+// The 7 letters most likely to be typed next
+var hotKey1;
+var hotKey2;
+var hotKey3;
+var hotKey4;
+var hotKey5;
+var hotKey6;
+var hotKey7;
+
+// key sets
+var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var numbers = "0123456789,.!?-/@#%()";
+var letterPosition;
+var numberPosition;
 
 // EVENTS
 
@@ -115,6 +133,7 @@ function addSpace() {
 
 // Determines probabilities of next character and final query
 function calculateProbabilities() {
+    
     // Finds every English word that begins with the current search string and displays the top results
     if (searchString.length > 0) {
         shortList = wordList.filter(word => word.startsWith(searchString.toLowerCase()));
@@ -148,20 +167,45 @@ function calculateProbabilities() {
         letterDistribution.sort(function (letter,frequency) {return frequency[1] - letter[1]});
         var top7LetterDistribution = letterDistribution.slice(0,7);
         var top7Letters = top7LetterDistribution.map((pair) => pair[0]).sort().toString().toUpperCase().replaceAll(",","");
-        character1 = (top7Letters.length>=1) ? top7Letters[0]: ".";
-        character2 = (top7Letters.length>=2) ? top7Letters[1]: ".";
-        character3 = (top7Letters.length>=3) ? top7Letters[2]: ".";
-        character4 = (top7Letters.length>=4) ? top7Letters[3]: ".";
-        character5 = (top7Letters.length>=5) ? top7Letters[4]: ".";
-        character6 = (top7Letters.length>=6) ? top7Letters[5]: ".";
-        character7 = (top7Letters.length>=7) ? top7Letters[6]: "."; 
+        hotKey1 = (top7Letters.length>=1) ? top7Letters[0]: ".";
+        hotKey2 = (top7Letters.length>=2) ? top7Letters[1]: ".";
+        hotKey3 = (top7Letters.length>=3) ? top7Letters[2]: ".";
+        hotKey4 = (top7Letters.length>=4) ? top7Letters[3]: ".";
+        hotKey5 = (top7Letters.length>=5) ? top7Letters[4]: ".";
+        hotKey6 = (top7Letters.length>=6) ? top7Letters[5]: ".";
+        hotKey7 = (top7Letters.length>=7) ? top7Letters[6]: "."; 
     }
+    character1 = hotKey1;
+    character2 = hotKey2;
+    character3 = hotKey3;
+    character4 = hotKey4;
+    character5 = hotKey5;
+    character6 = hotKey6;
+    character7 = hotKey7;
     updateDisplay();
 }
 
 // Determines where to place the "mouse"
 function chooseCursorLocation() {
-    
+    switch (selectorLocation) {
+        case "onCharacters":
+            if (characterCursorPosition == 0) {
+                moveCharacterKeysUp();
+            }
+            else if(characterCursorPosition == 8) {
+                moveCharacterKeysDown();
+            }
+            updateCharacterCursor();
+            break;
+        case "onResults":
+            updateResultCursor();
+            break;
+    }
+    updateButtonLabels();
+}
+
+// Temporarily clears the "mouse" before assigning its new location
+function clearCursor() {
     document.getElementById("cursor1").style.color = "beige";
     document.getElementById("cursor2").style.color = "beige";
     document.getElementById("cursor3").style.color = "beige";
@@ -178,16 +222,8 @@ function chooseCursorLocation() {
     document.getElementById("selection7").style.color = "beige";
     document.getElementById("selection8").style.color = "beige";
     document.getElementById("selection9").style.color = "beige";
-    switch (selectorLocation) {
-        case "onCharacters":
-            updateCharacterCursor();
-            break;
-        case "onResults":
-            updateResultCursor();
-            break;
-    }
-    updateButtonLabels();
 }
+
 
 // Displays after the user completes their search
 function completeSearch() {
@@ -207,6 +243,122 @@ function deleteCharacter() {
         resetKeyboard();
     }
 }
+
+//
+function moveCharacterKeysDown()
+{
+    characterCursorPosition = 7;
+    if (letterPosition < letters.length - 1) {
+        character1 = character2;
+        character2 = character3;
+        character3 = character4;
+        character4 = character5;
+        character5 = character6;
+        character6 = character7;
+    
+        switch (characterSet) {
+            case "onHotKeys":
+                characterSet = "onLetters";
+                letterPosition = 0;
+                character7 = letters[letterPosition];
+                break;
+            case "onLetters":
+                letterPosition += 1;
+                character7 = letters[letterPosition];
+                break;
+            case "onNumbers":
+                numberPosition -= 1;
+                switch (numberPosition) {
+                    case -1:
+                        characterSet = "onHotKeys";
+                        numberPosition = 0;
+                        character7 = hotKey7;
+                        break;
+                    case 0:
+                        character7 = hotKey6;
+                        break;
+                    case 1:
+                        character7 = hotKey5;
+                        break;
+                    case 2:
+                        character7 = hotKey4;
+                        break;
+                    case 3:
+                        character7 = hotKey3;
+                        break;
+                    case 4:
+                        character7 = hotKey2;
+                        break;
+                    case 5:
+                        character7 = hotKey1;
+                        break;
+                    default:
+                        character7 = numbers[numberPosition-6];
+                        break;
+                }
+                break;
+        }
+        updateCharacters();
+    }
+}
+
+//
+function moveCharacterKeysUp()
+{
+    characterCursorPosition = 1;
+        if (numberPosition < numbers.length - 1) {
+        character7 = character6;
+        character6 = character5;
+        character5 = character4;
+        character4 = character3;
+        character3 = character2;
+        character2 = character1;
+        switch (characterSet) {
+            case "onHotKeys":
+                characterSet = "onNumbers";
+                numberPosition = 0;
+                character1 = numbers[numberPosition];
+                break;
+            case "onNumbers":
+                numberPosition += 1;
+                character1 = numbers[numberPosition];
+                break;
+            case "onLetters":
+                letterPosition -= 1;
+                switch (letterPosition) {
+                    case -1:
+                        characterSet = "onHotKeys";
+                        letterPosition = 0;
+                        character1 = hotKey1;
+                        break;
+                    case 0:
+                        character1 = hotKey2;
+                        break;
+                    case 1:
+                        character1 = hotKey3;
+                        break;
+                    case 2:
+                        character1 = hotKey4;
+                        break;
+                    case 3:
+                        character1 = hotKey5;
+                        break;
+                    case 4:
+                        character1 = hotKey6;
+                        break;
+                    case 5:
+                        character1 = hotKey7;
+                        break;
+                    default:
+                        character1 = letters[letterPosition - 6 ];
+                        break;   
+                }    
+        }
+        updateCharacters();
+    }
+}
+
+
 
 // Determines what to do when the center button is pressed
 function pressButtonCenter() {
@@ -285,7 +437,7 @@ function pressButtonUp() {
     chooseCursorLocation();
 }
 
-//
+// Resets the keys to default values
 function resetKeyboard() {
     character1 ='A';
     character2 = 'C';
@@ -303,6 +455,16 @@ function resetKeyboard() {
     result7 = "the";
     result8 = "with";
     result9 = "you";
+    hotKey1 = character1;
+    hotKey2 = character2;
+    hotKey3 = character3;
+    hotKey4 = character4;
+    hotKey5 = character5;
+    hotKey6 = character6;
+    hotKey7 = character7;
+    characterSet = "onHotKeys";
+    letterPosition = 0;
+    numberPosition = 0;
 }
 
 // Updates the search string when the user selects one of the recommended results
@@ -424,6 +586,7 @@ function updateButtonLabels() {
                 document.getElementById("buttonCenter").innerHTML = "Select";
             }
         break;
+        
     }
 }
 
@@ -440,6 +603,7 @@ function updateCharacters() {
 
 // Updates the vertical position of the character cursor
 function updateCharacterCursor() {
+    clearCursor();
     switch (characterCursorPosition) {
         case 1:
             document.getElementById("cursor1").style.color = "black";
@@ -475,6 +639,19 @@ function updateDisplay() {
         displayString += "_";
     }
     document.getElementById("searchString").innerHTML = displayString;
+    if (selectorLocation == "onCharacters") {
+        if (character4 == ".") {
+            characterCursorPosition = 1;
+        }
+        else {
+            characterCursorPosition = 4;
+        }
+        updateCharacterCursor();
+    }
+    else if(SelectorLocation = "onResults") {
+        resultCursorPosition = 1;
+        updateResultCursor();
+    }
     updateCharacters();
     updateResults();
 }
@@ -494,7 +671,7 @@ function updateResults() {
 
 // Updates the vertical position of the results cursor
 function updateResultCursor() {
-    
+    clearCursor();
     switch (resultCursorPosition) {
         case 1:
             document.getElementById("selection1").style.color = "black";
