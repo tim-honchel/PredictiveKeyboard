@@ -12,6 +12,7 @@ var resultCursorPosition; // 1 to 9
 var characterSet; // onHotKeys, onLetters, onNumbers
 
 // User's search query
+var fullSearchString;
 var searchString;
 var displayString;
 
@@ -125,7 +126,7 @@ function addCharacter() {
             break;
     }
     if (characterToAdd != "&nbsp") {
-        searchString += characterToAdd;
+        fullSearchString += characterToAdd;
         calculateProbabilities();
     }
 }
@@ -133,7 +134,7 @@ function addCharacter() {
 // Adds a space to the seardh string
 function addSpace() {
     console.log("addSpace()");
-    searchString += " ";
+    fullSearchString += " ";
     calculateProbabilities();
 }
 
@@ -141,6 +142,8 @@ function addSpace() {
 // Determines probabilities of next character and final query
 function calculateProbabilities() {
     console.log("calclulateProbabilities()")
+
+    searchString = fullSearchString.split(" ").at(-1);
     // Finds every English word that begins with the current search string and displays the top results
     if (searchString.length > 0) {
         shortList = wordList.filter(word => word.startsWith(searchString.toLowerCase()));
@@ -290,8 +293,8 @@ function completeSearch() {
 // Backspaces the last character
 function deleteCharacter() {
     console.log("deleteCharacter()")
-    if (searchString.length > 0) {
-        searchString = searchString.substring(0, searchString.length - 1);
+    if (fullSearchString.length > 0) {
+        fullSearchString = fullSearchString.substring(0, fullSearchString.length - 1);
         calculateProbabilities();
     }
     else {
@@ -586,11 +589,13 @@ function selectResult() {
             resultSelected = "";
             break;
     }
-    if (resultSelected.toUpperCase() == searchString) {
+    var lastWordOfSearch = fullSearchString.split(" ").at(-1);
+    var theFirstPartOfSearch = fullSearchString.substring(0, fullSearchString.length - lastWordOfSearch.length);
+    if (resultSelected.toUpperCase() == lastWordOfSearch) {
         completeSearch();
     }
     else if(resultSelected != "&nbsp") {
-        searchString = resultSelected.toUpperCase();
+        fullSearchString = theFirstPartOfSearch + resultSelected.toUpperCase();
         calculateProbabilities();
     }
 }
@@ -601,8 +606,10 @@ function setStartingVariables() {
     selectorLocation = "onCharacters";
     characterCursorPosition = 4;
     resultCursorPosition = 1;
+    fullSearchString = "";
     searchString = "";
     displayString = "______________";
+    numberOfSpaces = 0;
     document.getElementById("searchString").style.color = "black";
     document.getElementById("buttonCenter").style.color = "black";
     document.getElementById("test1").innerHTML = "";
@@ -764,8 +771,8 @@ function updateDisplay() {
     if (searchString.length == 0) {
         resetKeyboard();
     }
-    displayString = searchString + "_";
-    for (var i = searchString.length; i<12; i++) {
+    displayString = fullSearchString + "_";
+    for (var i = fullSearchString.length; i<12; i++) {
         displayString += "_";
     }
     document.getElementById("searchString").innerHTML = displayString;
