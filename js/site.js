@@ -47,11 +47,14 @@ var hotKey5;
 var hotKey6;
 var hotKey7;
 
-// key sets
+// Key sets
 var letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var numbers = "0123456789,.!?-/@#%()";
 var letterPosition;
 var numberPosition;
+
+// Record of the last button pressed
+var lastButton;
 
 // EVENTS
 
@@ -93,6 +96,7 @@ document.addEventListener('keydown', function(logKey) {
 
 // Adds a character to the search string
 function addCharacter() {
+    console.log("addCharacter()");
     var characterToAdd;
     switch (characterCursorPosition) {
         case 1:
@@ -120,20 +124,23 @@ function addCharacter() {
             characterToAdd = "";
             break;
     }
-    searchString += characterToAdd;
-    calculateProbabilities();
+    if (characterToAdd != "&nbsp") {
+        searchString += characterToAdd;
+        calculateProbabilities();
+    }
 }
 
 // Adds a space to the seardh string
 function addSpace() {
-    searchString += "_";
+    console.log("addSpace()");
+    searchString += " ";
     calculateProbabilities();
 }
 
 
 // Determines probabilities of next character and final query
 function calculateProbabilities() {
-    
+    console.log("calclulateProbabilities()")
     // Finds every English word that begins with the current search string and displays the top results
     if (searchString.length > 0) {
         shortList = wordList.filter(word => word.startsWith(searchString.toLowerCase()));
@@ -143,14 +150,14 @@ function calculateProbabilities() {
             }
         }
         result1 = searchString.toLowerCase();
-        result2 = (shortList.length>=1) ? shortList[0]: ".";
-        result3 = (shortList.length>=2) ? shortList[1]: ".";
-        result4 = (shortList.length>=3) ? shortList[2]: ".";
-        result5 = (shortList.length>=4) ? shortList[3]: ".";
-        result6 = (shortList.length>=5) ? shortList[4]: ".";
-        result7 = (shortList.length>=6) ? shortList[5]: ".";
-        result8 = (shortList.length>=7) ? shortList[6]: ".";
-        result9 = (shortList.length>=8) ? shortList[7]: ".";
+        result2 = (shortList.length>=1) ? shortList[0]: "&nbsp";
+        result3 = (shortList.length>=2) ? shortList[1]: "&nbsp";
+        result4 = (shortList.length>=3) ? shortList[2]: "&nbsp";
+        result5 = (shortList.length>=4) ? shortList[3]: "&nbsp";
+        result6 = (shortList.length>=5) ? shortList[4]: "&nbsp";
+        result7 = (shortList.length>=6) ? shortList[5]: "&nbsp";
+        result8 = (shortList.length>=7) ? shortList[6]: "&nbsp";
+        result9 = (shortList.length>=8) ? shortList[7]: "&nbsp";
         updateDisplay();
     
         // Finds the most common next characters and displays them as keys
@@ -167,13 +174,13 @@ function calculateProbabilities() {
         letterDistribution.sort(function (letter,frequency) {return frequency[1] - letter[1]});
         var top7LetterDistribution = letterDistribution.slice(0,7);
         var top7Letters = top7LetterDistribution.map((pair) => pair[0]).sort().toString().toUpperCase().replaceAll(",","");
-        hotKey1 = (top7Letters.length>=1) ? top7Letters[0]: ".";
-        hotKey2 = (top7Letters.length>=2) ? top7Letters[1]: ".";
-        hotKey3 = (top7Letters.length>=3) ? top7Letters[2]: ".";
-        hotKey4 = (top7Letters.length>=4) ? top7Letters[3]: ".";
-        hotKey5 = (top7Letters.length>=5) ? top7Letters[4]: ".";
-        hotKey6 = (top7Letters.length>=6) ? top7Letters[5]: ".";
-        hotKey7 = (top7Letters.length>=7) ? top7Letters[6]: "."; 
+        hotKey1 = (top7Letters.length>=1) ? top7Letters[0]: "&nbsp";
+        hotKey2 = (top7Letters.length>=2) ? top7Letters[1]: "&nbsp";
+        hotKey3 = (top7Letters.length>=3) ? top7Letters[2]: "&nbsp";
+        hotKey4 = (top7Letters.length>=4) ? top7Letters[3]: "&nbsp";
+        hotKey5 = (top7Letters.length>=5) ? top7Letters[4]: "&nbsp";
+        hotKey6 = (top7Letters.length>=6) ? top7Letters[5]: "&nbsp";
+        hotKey7 = (top7Letters.length>=7) ? top7Letters[6]: "&nbsp"; 
     }
     character1 = hotKey1;
     character2 = hotKey2;
@@ -182,18 +189,62 @@ function calculateProbabilities() {
     character5 = hotKey5;
     character6 = hotKey6;
     character7 = hotKey7;
+    updateButtonLabels();
     updateDisplay();
 }
 
 // Determines where to place the "mouse"
 function chooseCursorLocation() {
+    console.log("chooseCursorLocation")
     switch (selectorLocation) {
         case "onCharacters":
             if (characterCursorPosition == 0) {
-                moveCharacterKeysUp();
+                if (characterSet == "onLetters" && hotKey7 == "&nbsp" && letterPosition <= 6) {
+                    letterPosition = 0;
+                    characterSet = "onHotKeys";
+                    calculateProbabilities();
+                }
+                else {
+                    moveCharacterKeysUp();
+                }
             }
             else if(characterCursorPosition == 8) {
                 moveCharacterKeysDown();
+            }
+            var characterToCheck;
+            switch (characterCursorPosition) {
+                case 1:
+                    characterToCheck = character1;
+                    break;
+                case 2:
+                    characterToCheck = character2;
+                    break;
+                case 3:
+                    characterToCheck = character3;
+                    break;
+                case 4:
+                    characterToCheck = character4;
+                    break;
+                case 5:
+                    characterToCheck = character5;
+                    break;
+                case 6:
+                    characterToCheck = character6;
+                    break;
+                case 7:
+                    characterToCheck = character7;
+                    break;
+                default:
+                    break;
+            }
+            if (characterToCheck == "&nbsp") {
+                if (lastButton == "down") {
+                    skipEmptyCharactersToLetters();
+                }
+                if (lastButton == "up") {
+                    skipEmptyCharactersToNumbers();
+                }
+                updateCharacters();
             }
             updateCharacterCursor();
             break;
@@ -206,6 +257,7 @@ function chooseCursorLocation() {
 
 // Temporarily clears the "mouse" before assigning its new location
 function clearCursor() {
+    console.log("clearCursor()")
     document.getElementById("cursor1").style.color = "beige";
     document.getElementById("cursor2").style.color = "beige";
     document.getElementById("cursor3").style.color = "beige";
@@ -227,14 +279,17 @@ function clearCursor() {
 
 // Displays after the user completes their search
 function completeSearch() {
+    console.log("completeSearch()")
     selectorLocation = "complete";
     document.getElementById("searchString").style.color = "green";
-    document.getElementById("test1").innerHTML = "Search complete! Press backspace to start a new search.";    
+    document.getElementById("test1").innerHTML = "Search complete! Press backspace to start a new search.";
+    document.getElementById("test1").style.color = "green";    
     chooseCursorLocation();
 }
 
 // Backspaces the last character
 function deleteCharacter() {
+    console.log("deleteCharacter()")
     if (searchString.length > 0) {
         searchString = searchString.substring(0, searchString.length - 1);
         calculateProbabilities();
@@ -244,9 +299,10 @@ function deleteCharacter() {
     }
 }
 
-//
+// Adjusts keys when moving from one character set to another
 function moveCharacterKeysDown()
 {
+    console.log("moveCharacterKeysDown()")
     characterCursorPosition = 7;
     if (letterPosition < letters.length - 1) {
         character1 = character2;
@@ -302,9 +358,10 @@ function moveCharacterKeysDown()
     }
 }
 
-//
+// Adjusts keys when moving from one character set to another
 function moveCharacterKeysUp()
 {
+    console.log("moveCharacterKeysUp()")
     characterCursorPosition = 1;
         if (numberPosition < numbers.length - 1) {
         character7 = character6;
@@ -347,7 +404,20 @@ function moveCharacterKeysUp()
                         character1 = hotKey6;
                         break;
                     case 5:
-                        character1 = hotKey7;
+                        if (hotKey1 != "&nbsp") {    
+                            character1 = hotKey7;
+                        }
+                        else {
+                            characterSet = "onNumbers";
+                            numberPosition = 0;
+                            character1 = numbers[6];
+                            character2 = numbers[5];
+                            character3 = numbers[4];
+                            character4 = numbers[3];
+                            character5 = numbers[2];
+                            character6 = numbers[1];
+                            character7 = numbers[0];
+                        }
                         break;
                     default:
                         character1 = letters[letterPosition - 6 ];
@@ -362,6 +432,8 @@ function moveCharacterKeysUp()
 
 // Determines what to do when the center button is pressed
 function pressButtonCenter() {
+    console.log("pressButtonCenter()")
+    lastButton = "center";
     document.getElementById("buttonCenter").style.backgroundColor = "yellow";
     setTimeout(() => { document.getElementById("buttonCenter").style.backgroundColor = "whitesmoke" },250);
     switch (selectorLocation) {
@@ -376,12 +448,14 @@ function pressButtonCenter() {
 
 // Determines what to do when the down button is pressed
 function pressButtonDown() {
+    console.log("pressButtonDown()")
+    lastButton = "down";
     document.getElementById("buttonDown").style.backgroundColor = "yellow";
     setTimeout(() => { document.getElementById("buttonDown").style.backgroundColor = "whitesmoke" },250);
     if (selectorLocation == "onCharacters" && characterCursorPosition <8) {
         characterCursorPosition += 1;
     }
-    else if (selectorLocation == "onResults" && resultCursorPosition <9) {
+    else if (selectorLocation == "onResults" && resultCursorPosition <9 && resultCursorPosition <= shortList.length) {
         resultCursorPosition += 1;
     }
     chooseCursorLocation();
@@ -389,6 +463,8 @@ function pressButtonDown() {
 
 // Determines what to do when the left button is pressed
 function pressButtonLeft() {
+    console.log("pressButtonLeft()")
+    lastButton = "left";
     document.getElementById("buttonLeft").style.backgroundColor = "yellow";
     setTimeout(() => { document.getElementById("buttonLeft").style.backgroundColor = "whitesmoke" },250);
     switch (selectorLocation) {
@@ -398,7 +474,8 @@ function pressButtonLeft() {
         case "onResults":
             selectorLocation = "onCharacters";
             resultCursorPosition = 1;
-            chooseCursorLocation();
+            calculateProbabilities();
+            //chooseCursorLocation();
             break;
         case "complete":
             setStartingVariables();
@@ -409,6 +486,8 @@ function pressButtonLeft() {
 
 // Determines what to do when the rught button is pressed
 function pressButtonRight() {
+    console.log("pressButtonRight()")
+    lastButton = "right";
     document.getElementById("buttonRight").style.backgroundColor = "yellow";
     setTimeout(() => { document.getElementById("buttonRight").style.backgroundColor = "whitesmoke" },250);
     switch (selectorLocation) {
@@ -426,6 +505,8 @@ function pressButtonRight() {
 
 // Determines what to do when the up button is pressed
 function pressButtonUp() {
+    console.log("pressButtonUp()")
+    lastButton = "up";
     document.getElementById("buttonUp").style.backgroundColor = "yellow";
     setTimeout(() => { document.getElementById("buttonUp").style.backgroundColor = "whitesmoke" },250);
     if (selectorLocation == "onCharacters" && characterCursorPosition >0) {
@@ -439,6 +520,7 @@ function pressButtonUp() {
 
 // Resets the keys to default values
 function resetKeyboard() {
+    console.log("resetKeyboard()")
     character1 ='A';
     character2 = 'C';
     character3 = 'M';
@@ -465,10 +547,12 @@ function resetKeyboard() {
     characterSet = "onHotKeys";
     letterPosition = 0;
     numberPosition = 0;
+    shortList = ["1","2","3","4","5","6","7","8","9"];
 }
 
 // Updates the search string when the user selects one of the recommended results
 function selectResult() {
+    console.log("selectResult()")
     var resultSelected;
     switch (resultCursorPosition) {
         case 1:
@@ -505,7 +589,7 @@ function selectResult() {
     if (resultSelected.toUpperCase() == searchString) {
         completeSearch();
     }
-    else {
+    else if(resultSelected != "&nbsp") {
         searchString = resultSelected.toUpperCase();
         calculateProbabilities();
     }
@@ -513,39 +597,80 @@ function selectResult() {
 
 // Sets or resets the variable values for beginning a new search
 function setStartingVariables() {
+    console.log("setStartingVariables()")
     selectorLocation = "onCharacters";
     characterCursorPosition = 4;
     resultCursorPosition = 1;
     searchString = "";
     displayString = "______________";
     document.getElementById("searchString").style.color = "black";
+    document.getElementById("buttonCenter").style.color = "black";
     document.getElementById("test1").innerHTML = "";
+    document.getElementById("test1").style.color = "black"; 
     shortList = [];
     resetKeyboard();
     chooseCursorLocation();
     updateDisplay();
 }
 
+// Skips over empty keys when scrolling
+function skipEmptyCharactersToLetters() {
+    console.log("skipEmptyCharactersToLetters()")
+        characterSet = "onLetters";
+        letterPosition = 6;
+        characterCursorPosition = 1;
+        character1 = letters[0];
+        character2 = letters[1];
+        character3 = letters[2];
+        character4 = letters[3];
+        character5 = letters[4];
+        character6 = letters[5];
+        character7 = letters[6];
+}
+
+// Skips
+function skipEmptyCharactersToNumbers() {
+    console.log("skipEmptyCharactersToNumbers()")
+        characterSet = "onNumbers";
+        numberPosition = 6;
+        characterCursorPosition = 7;
+        character1 = numbers[6];
+        character2 = numbers[5];
+        character3 = numbers[4];
+        character4 = numbers[3];
+        character5 = numbers[2];
+        character6 = numbers[1];
+        character7 = numbers[0];
+    
+}
+
 // Updates the button labels when the user switches between the keyboard and the results
 function updateButtonLabels() {
+    console.log("updateButtonLabels()")
+    //document.getElementById("test1").innerHTML = `${selectorLocation}, ${characterSet}, lp=${letterPosition}, np=${numberPosition}`;
     switch (selectorLocation) {
         case "onCharacters":
             document.getElementById("buttonLeft").innerHTML = "Backspace";
+            document.getElementById("buttonLeft").style.fontStyle = "normal";
             document.getElementById("buttonRight").innerHTML = "To Results";
+            document.getElementById("buttonRight").style.fontStyle = "italic";
             document.getElementById("buttonCenter").innerHTML = "Select";
+            document.getElementById("buttonCenter").style.color = "black";
             document.getElementById("buttonUp").innerHTML = "Scroll Up";
             document.getElementById("buttonDown").innerHTML = "Scroll Down";
             break;
         case "complete":
             document.getElementById("buttonLeft").innerHTML = "New Search";
-            document.getElementById("buttonRight").innerHTML = ".";
-            document.getElementById("buttonCenter").innerHTML = ".";
-            document.getElementById("buttonUp").innerHTML = ".";
-            document.getElementById("buttonDown").innerHTML = ".";
+            document.getElementById("buttonRight").innerHTML = "&nbsp";
+            document.getElementById("buttonCenter").innerHTML = "&nbsp";
+            document.getElementById("buttonUp").innerHTML = "&nbsp";
+            document.getElementById("buttonDown").innerHTML = "&nbsp";
             break;
         case "onResults":
             document.getElementById("buttonLeft").innerHTML = "To Keyboard";
+            document.getElementById("buttonLeft").style.fontStyle = "italic";
             document.getElementById("buttonRight").innerHTML = "Space";
+            document.getElementById("buttonRight").style.fontStyle = "normal";
             var resultHovered;
             switch (resultCursorPosition) {
                 case 1:
@@ -581,9 +706,11 @@ function updateButtonLabels() {
             }
             if (resultHovered.toUpperCase() == searchString) {
                 document.getElementById("buttonCenter").innerHTML = "Finish Search";
+                document.getElementById("buttonCenter").style.color = "green";
             }
             else {
                 document.getElementById("buttonCenter").innerHTML = "Select";
+                document.getElementById("buttonCenter").style.color = "black";
             }
         break;
         
@@ -592,6 +719,7 @@ function updateButtonLabels() {
 
 // Updates the displayed character options on the keyboard
 function updateCharacters() {
+    console.log("updateCharacters()")
     document.getElementById("key1").innerHTML = character1;
     document.getElementById("key2").innerHTML = character2;
     document.getElementById("key3").innerHTML = character3;
@@ -603,6 +731,7 @@ function updateCharacters() {
 
 // Updates the vertical position of the character cursor
 function updateCharacterCursor() {
+    console.log("updateCharacterCursor()");
     clearCursor();
     switch (characterCursorPosition) {
         case 1:
@@ -631,6 +760,7 @@ function updateCharacterCursor() {
 
 // Updates the display of the search string
 function updateDisplay() {
+    console.log("updateDisplay()")
     if (searchString.length == 0) {
         resetKeyboard();
     }
@@ -640,7 +770,7 @@ function updateDisplay() {
     }
     document.getElementById("searchString").innerHTML = displayString;
     if (selectorLocation == "onCharacters") {
-        if (character4 == ".") {
+        if(character4 == "&nbsp") {
             characterCursorPosition = 1;
         }
         else {
@@ -658,6 +788,7 @@ function updateDisplay() {
 
 // Updates the displayed character options on the keyboard
 function updateResults() {
+    console.log("updateResults()")
     document.getElementById("result1").innerHTML = result1;
     document.getElementById("result2").innerHTML = result2;
     document.getElementById("result3").innerHTML = result3;
@@ -671,6 +802,7 @@ function updateResults() {
 
 // Updates the vertical position of the results cursor
 function updateResultCursor() {
+    console.log("updateResultCursor()")
     clearCursor();
     switch (resultCursorPosition) {
         case 1:

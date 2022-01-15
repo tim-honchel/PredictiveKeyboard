@@ -32,12 +32,14 @@
     line-height: .4;
 }
 
-#cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom {
-    color:beige;
+.cursor-container p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight:900;
+    
 }
 
-#finished {
-    font-weight: bold;
+#cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom {
+    color:beige;
 }
 
 footer {
@@ -78,6 +80,12 @@ footer {
     width: max-content;
     padding: 10px 0px 10px 10px;
     line-height: .4;
+}
+
+.selection-container p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight:900;
+    
 }
 
 #selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selection8, #selection9 {
