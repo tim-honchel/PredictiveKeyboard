@@ -261,22 +261,22 @@ function chooseCursorLocation() {
 // Temporarily clears the "mouse" before assigning its new location
 function clearCursor() {
     console.log("clearCursor()")
-    document.getElementById("cursor1").style.color = "beige";
-    document.getElementById("cursor2").style.color = "beige";
-    document.getElementById("cursor3").style.color = "beige";
-    document.getElementById("cursor4").style.color = "beige";
-    document.getElementById("cursor5").style.color = "beige";
-    document.getElementById("cursor6").style.color = "beige";
-    document.getElementById("cursor7").style.color = "beige";
-    document.getElementById("selection1").style.color = "beige";
-    document.getElementById("selection2").style.color = "beige";
-    document.getElementById("selection3").style.color = "beige";
-    document.getElementById("selection4").style.color = "beige";
-    document.getElementById("selection5").style.color = "beige";
-    document.getElementById("selection6").style.color = "beige";
-    document.getElementById("selection7").style.color = "beige";
-    document.getElementById("selection8").style.color = "beige";
-    document.getElementById("selection9").style.color = "beige";
+    document.getElementById("cursor1").style.color = "ghostwhite";
+    document.getElementById("cursor2").style.color = "ghostwhite";
+    document.getElementById("cursor3").style.color = "ghostwhite";
+    document.getElementById("cursor4").style.color = "ghostwhite";
+    document.getElementById("cursor5").style.color = "ghostwhite";
+    document.getElementById("cursor6").style.color = "ghostwhite";
+    document.getElementById("cursor7").style.color = "ghostwhite";
+    document.getElementById("selection1").style.color = "ghostwhite";
+    document.getElementById("selection2").style.color = "ghostwhite";
+    document.getElementById("selection3").style.color = "ghostwhite";
+    document.getElementById("selection4").style.color = "ghostwhite";
+    document.getElementById("selection5").style.color = "ghostwhite";
+    document.getElementById("selection6").style.color = "ghostwhite";
+    document.getElementById("selection7").style.color = "ghostwhite";
+    document.getElementById("selection8").style.color = "ghostwhite";
+    document.getElementById("selection9").style.color = "ghostwhite";
 }
 
 
@@ -285,8 +285,8 @@ function completeSearch() {
     console.log("completeSearch()")
     selectorLocation = "complete";
     document.getElementById("searchString").style.color = "green";
-    document.getElementById("test1").innerHTML = "Search complete! Press backspace to start a new search.";
-    document.getElementById("test1").style.color = "green";    
+    document.getElementById("resultUp").innerHTML = "Search complete!";
+    document.getElementById("resultUp").style.color = "green";    
     chooseCursorLocation();
 }
 
@@ -613,7 +613,9 @@ function setStartingVariables() {
     document.getElementById("searchString").style.color = "black";
     document.getElementById("buttonCenter").style.color = "black";
     document.getElementById("test1").innerHTML = "";
-    document.getElementById("test1").style.color = "black"; 
+    document.getElementById("test1").style.color = "black";
+    document.getElementById("resultUp").innerHTML = "."; 
+    document.getElementById("resultUp").style.color = "ghostwhite";
     shortList = [];
     resetKeyboard();
     chooseCursorLocation();

@@ -14,19 +14,30 @@
     <div class="container">
         <main class="pb-3">
             <div>
-                <h1>Keyboard Demo</h1>
-                <p>Test this alternative for devices like TV's and game consoles that lack a built-in keyboard.</p>
-                <ol>
-                    <li>Use the 5 standard controls (up, down, left, right, and enter) to make a search query.</li>
-                    <li>The keyboard will calculate the probabilities of which character you will type next.</li>
-                    <li>The keys will be arranged accordingly to save you time.</li>
-                    <li>See the button labels for the controls.</li>
-                    <li>The controls will toggle when you move left and right between keyboard and results.</li>
-                </ol>
+                <h1>App Demo for Devices Lacking Built-In Keyboards</h1>
+                <p>Use the 5 outlined buttons on the remote control to make use of the TV screen keyboard. </p>
                 <br>
-                <br>
-                <div class="main-container">
+                <div class="remote-container">
                     <div class="button-container">
+                        <br>
+                        <button id = "decoyPower" type = "button" disabled>I/O</button>
+                        <br>
+                        <br>
+                        <button id = "decoy1" type = "button" disabled>1</button>
+                        <button id = "decoy2" type = "button" disabled>2</button>
+                        <button id = "decoy3" type = "button" disabled>3</button>
+                        <br>
+                        <button id = "decoy4" type = "button" disabled>4</button>
+                        <button id = "decoy5" type = "button" disabled>5</button>
+                        <button id = "decoy6" type = "button" disabled>6</button>
+                        <br>
+                        <button id = "decoy7" type = "button" disabled>7</button>
+                        <button id = "decoy8" type = "button" disabled>8</button>
+                        <button id = "decoy9" type = "button" disabled>9</button>
+                        <br>
+                        <button id = "decoy0" tyoe = "button" disabled>0</button>
+                        <br>
+                        <br>
                         <button id="buttonUp" type="button">Scroll Up</button>
                         <br>
                         <button id="buttonLeft" type="button">Backspace</button>
@@ -36,6 +47,10 @@
                         <br>
                         <button id="buttonDown" type="button">Scroll Down</button>
                     </div>
+                </div>
+                <div class ="white-space">
+                </div>
+                <div class="tv-container">
                     <div class="cursor-container">
                         <p id="cursorTop">#</p>
                         <p id="cursorUp">#</p>
@@ -77,7 +92,7 @@
                     </div>
                     <div class="results-container">
                         <p id ="searchString">_____________</p>
-                        <br>
+                        <p id ="resultUp">.</p>
                         <p id ="result1">and</p>
                         <p id ="result2">for</p>
                         <p id ="result3">have</p>

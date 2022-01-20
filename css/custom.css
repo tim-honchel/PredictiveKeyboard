@@ -9,7 +9,7 @@
     padding:10px;
 }
 
-.button-container button {
+#buttonUp, #buttonLeft, #buttonCenter, #buttonRight, #buttonDown {
     height: 50px;
     width: 100px;
     background-color:whitesmoke;
@@ -26,10 +26,14 @@
 
 .cursor-container {
     float: left;
-    background-color:beige;
+    background-color:ghostwhite;
     width: max-content;
-    padding: 10px 0px 10px 10px;
+    padding: 10px 0px 10px 50px;
     line-height: .4;
+    border-top: solid black 5px;
+    border-bottom: solid black 5px;
+    border-left: solid black 5px;
+    
 }
 
 .cursor-container p {
@@ -39,7 +43,24 @@
 }
 
 #cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom {
-    color:beige;
+    color:ghostwhite;
+}
+
+#decoyPower, #decoy1, #decoy2, #decoy3, #decoy4, #decoy5, #decoy6, #decoy7, #decoy8, #decoy9, #decoy0 {
+    height: 30px;
+    width: 100px;
+    background-color:whitesmoke;
+}
+
+#decoyPower {
+    border-radius: 100%;
+    height:50px;
+    width:50px;
+}
+
+#decoy0 {
+    display:block;
+    margin:auto;
 }
 
 footer {
@@ -52,34 +73,43 @@ footer {
 
 .keyboard-container {
     float:left;
-    background-color:beige;
+    background-color:ghostwhite;
     width: max-content;
     padding:10px 10px 10px 0px;
     line-height:.4;
+    border-top: solid black 5px;
+    border-bottom: solid black 5px;
+    
 }
 
 .keyboard-container p {
     text-align:center
 }
 
-.main-container {
+.remote-container {
     column-gap: 0%;
 }
 
 .results-container {
     float:left;
-    background-color: beige;
+    background-color:ghostwhite;
     width: max-content;
-    padding:10px;
+    padding:10px 50px 10px 10px;
     line-height:.4;
+    border-top: solid black 5px;
+    border-bottom: solid black 5px;
+    border-right: solid black 5px;
 }
 
 .selection-container {
     float: left;
-    background-color:beige;
+    background-color:ghostwhite;
     width: max-content;
     padding: 10px 0px 10px 10px;
     line-height: .4;
+    border-top: solid black 5px;
+    border-bottom: solid black 5px;
+    
 }
 
 .selection-container p {
@@ -89,7 +119,7 @@ footer {
 }
 
 #selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selection8, #selection9 {
-    color: beige;
+    color:ghostwhite;
     font-weight:bold;
 }
 
@@ -97,4 +127,25 @@ footer {
     float:left;
     width:100%;
 }
+
+
+.tv-container {
+    column-gap: 0%;
+}
+
+.TV-container p {
+    font-size: 48pt;
+}
   
+.white-space {
+    float: left;
+    background-color:white;
+    width: 50px;
+    padding: 10px 0px 10px 10px;
+    line-height: .4;
+}
+#cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor4, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom, #keyHeader, #keyUp, #key1, #key2, #key3, #key4, #key5, #key6, #key7, #keyDown, #keyFooter, #selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selection8, #selection9, #searchString, #resultUp, #result1, #result2, #result3, #result4, #result5, #result6, #result7, #result8, #result9 {
+    font-size: 19pt;
+    
+}
+
