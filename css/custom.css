@@ -149,3 +149,51 @@ footer {
     
 }
 
+@media screen and (max-height: 481px){
+    body {
+        padding:5px;
+    }
+    .cursor-container {
+        padding: 10px 0px 10px 10px;
+    }
+    footer {
+        position:relative;
+    }
+    h1 {
+        font-size:14pt;
+    }
+    .results-container {
+        padding:10px 10px 10px 10px;
+    }
+    .white-space {
+        width: 10px;
+    }
+    #cursorTop, #cursorUp, #cursor1, #cursor2, #cursor3, #cursor4, #cursor5, #cursor6, #cursor7, #cursorDown, #cursorBottom, #keyHeader, #keyUp, #key1, #key2, #key3, #key4, #key5, #key6, #key7, #keyDown, #keyFooter, #selectionTop, #selectionUp, #selection1, #selection2, #selection3, #selection4, #selection5, #selection6, #selection7, #selection8, #selection9, #searchString, #resultUp, #result1, #result2, #result3, #result4, #result5, #result6, #result7, #result8, #result9 {
+        font-size: 14pt;
+        
+    }
+
+}
+
+
+@media screen and (max-width: 481px){
+    body {
+        padding:5px;
+    }
+    .cursor-container {
+        padding: 10px 0px 10px 10px;
+    }
+    footer {
+        position:relative;
+    }
+    h1 {
+        font-size:14pt;
+    }
+    .results-container {
+        padding:10px 10px 10px 10px;
+    }
+    .white-space {
+        width: 10px;
+    }
+}
+
