@@ -158,12 +158,13 @@ footer {
     }
     #decoyPower, #decoy1, #decoy2, #decoy3, #decoy4, #decoy5, #decoy6, #decoy7, #decoy8, #decoy9, #decoy0 {
         height: 5px;
-        width: 100px;
-        background-color:whitesmoke;
+        font-size: 2pt;
     }
     footer {
         position:relative;
-        display:block;
+    }
+    footer p {
+        clear:both;
     }
     h1 {
         font-size:14pt;
@@ -191,7 +192,9 @@ footer {
     }
     footer {
         position:relative;
-        display:block;
+    }
+    footer p {
+        clear:both;
     }
     h1 {
         font-size:14pt;
