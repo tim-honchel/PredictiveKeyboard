@@ -161,10 +161,10 @@ footer {
         font-size: 2pt;
     }
     footer {
-        position:absolute;
+        position:relative;
     }
     footer p {
-        clear:left;
+        font-size:0pt;
     }
     h1 {
         font-size:14pt;
@@ -192,6 +192,9 @@ footer {
     }
     footer {
         position:relative;
+    }
+    footer p {
+        font-size: 0pt;
     }
     h1 {
         font-size:14pt;
