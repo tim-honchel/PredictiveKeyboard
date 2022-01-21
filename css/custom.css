@@ -160,12 +160,12 @@ footer {
         height: 5px;
         font-size: 2pt;
     }
-    footer {
+    /*footer {
         position:relative;
     }
     footer p {
         clear:both;
-    }
+    }*/
     h1 {
         font-size:14pt;
     }
